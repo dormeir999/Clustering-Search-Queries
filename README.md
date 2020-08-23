@@ -92,7 +92,8 @@ some lower functions contain saving and loading models and NLP vectorizors
 
 Hence, here's the functions order of running:
 
-1. import_process_cluster_output_log: run entire pipeline logging capability
+
+    1. import_process_cluster_output_log: run entire pipeline logging capability
 
     2. import_process_cluster_output: run entire pipeline
     
@@ -132,31 +133,32 @@ Hence, here's the functions order of running:
     17. feature_engineering: adds the price feature for each cluster
     
     ----- if the queries df has several days, continue to the functions below -----
-    17. evaluate_aggregated_clusters_over_all_features: creates a dict with a key for each feature data over all days in all clusters
     
-       18. evaluate_aggregated_clusters: organize data over all days in all clusters for a specific feature
+    18. evaluate_aggregated_clusters_over_all_features: creates a dict with a key for each feature data over all days in all clusters
+    
+       19. evaluate_aggregated_clusters: organize data over all days in all clusters for a specific feature
        
-    19. add_silhouette_score_over_all_days: create an average silhouette score of all days for all features evaluated
+    20. add_silhouette_score_over_all_days: create an average silhouette score of all days for all features evaluated
     
-    20. add_centroid_score_over_all_days: create an average centroid distance score of all days for all the features
+    21. add_centroid_score_over_all_days: create an average centroid distance score of all days for all the features
     
-    21. get_and_plot_clusters_all_days: plots the evaluated features over time and cluster, 
+    22. get_and_plot_clusters_all_days: plots the evaluated features over time and cluster, 
         for the highest score clusters.
         
-       22. plot_cluster_evaluated_all_features: if there are cluster that appear in all days, plot them. else - 
+       23. plot_cluster_evaluated_all_features: if there are cluster that appear in all days, plot them. else - 
        
-       23. plot_counts_and_highest_values_over_numeric_features: plot the top scored clusters with highest values and
+       24. plot_counts_and_highest_values_over_numeric_features: plot the top scored clusters with highest values and
             counts.
             
-    24. pickle_something: saves a pickle of the evaluated features over days over each cluster 
+    25. pickle_something: saves a pickle of the evaluated features over days over each cluster 
     
     ----- The functions below will run also for just one day -----
     
-    25. pickle_something: saves a pickle of the kmeans models used  for labeling each search query (there's one model 
+    26. pickle_something: saves a pickle of the kmeans models used  for labeling each search query (there's one model 
         for each sub category in each day), a pickle of the vectorizers used for representing the language data, and a
         pickle for dictionary 
         
-    26. df_save: saves the queries df with the labeling data (a row for each search query),
+    27. df_save: saves the queries df with the labeling data (a row for each search query),
         and the aggregate clusters data (a row for each cluster in each day) 
      
      
