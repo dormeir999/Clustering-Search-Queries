@@ -96,8 +96,8 @@ Hence, here's the functions order of running:
 
     2. import_process_cluster_output: run entire pipeline
     
-      3. import_df: import the search queries df (as exported from BigQuery)
-      
+      3. import_df: import the search queries df
+     
       4. pre_process_df: prepare the df for clustering
       
         5. clean_search_query: clean the language data
