@@ -83,37 +83,7 @@ and the running time of the entire process.
 
 ## Usage
 
-1. Download the search queries data csv file from BigQuery using this command:
-`select search_date, search_query,
-sum(number_of_searches) number_of_searches,
-sum(searches_with_clicks) searches_with_clicks,
-avg(total_number_of_search_results) total_number_of_search_results,
-sum(orders) orders,
-sum(revenue),
-most_common_sub_category_name, 
-most_common_category_name
-from `itc-data-science.dwh.search_keywords`
-where search_query is not null
-and search_date = '2019-11-20'
-group by search_date, search_query, most_common_sub_category_name,most_common_category_name
-order by 2`
-
-You can change the `search_date` to either one day (for daily analysis) or several days (for long term trends research).
-2. update configs.yaml `fname_for_import` value to the absolute path of the downloaded csv (you can leave the rest of 
-the values as default, or change them as you wish)
-3. run `python main.py`, or load the function in the `utils.py` file and run them separately. 
-
-### Changing Running Parameters (configs.yaml)
-
-* The first bulk of values is of the *Production* values - 
-the complete pipeline (aka last function of the complete pipeline `import_process_cluster_output_log`)
-uses these values. change only if you already tested those values.
-* The second bulk of values is of the *Research* values -
-The functions below the highest functions use these values as default.
-You can change those values and run the lower function for optimizing the algorithem.
-* You can also overrule the yaml values when calling a function, while specifying values
-for the function parameters (otherwise the parameters defaults will be used,
-which are in most cases the yaml file values)
+run `python main.py`, or load the function in the `utils.py` file and run them separately. 
 
 ### The Pipeline Structure (utils.py)
 
