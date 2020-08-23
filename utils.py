@@ -61,7 +61,7 @@ def pre_process_df(df, date, drop_cols=True, remove_na=True, remove_duplicate=Tr
     """
     Receives the search query df and returns preprocessed df cleaned from na's, duplicates, date converted
      or grouped df by a specific feature
-    :param remove_i_will: If true, removes all queries starting in "i will", which have clear seller intent.
+    :param remove_i_will: If true, removes all queries starting in "i will".
     :param date: The date of the search queries (will be updated in each row of the 'search_date' column
     :param remove_short_queries: if true, remove queries with shorter characters than the minimal n_gram
     :param drop_cols: if true, removes the columns of
