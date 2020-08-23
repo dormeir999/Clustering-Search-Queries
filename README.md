@@ -3,7 +3,7 @@
 Cluster Search Queries is a Python module for automated clustering search queries into meaningful groups,
  solving two main problem:
 * Typos
-* Different Phrasings for same buyer intent
+* Different Phrasings for same search intent
 
 You can Use the module's result to explore different groups of search queries and find new search query trends.
 
