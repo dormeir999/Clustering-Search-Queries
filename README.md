@@ -24,9 +24,8 @@ but the TF-IDF scoring method isn't good enough.
 The maximum amount of clusters the module will find is 8500 clusters for a day,
 if there are 170 most common sub-categories in of all search queries in a day. 
 Usually some sub-categories are associated with very few search queries, so they will be clustered into less
-than 50 clusters. The total number of clusters that were found for 7 days in March (25/3-31/3) is 53595,
-but grouping by the cluster name and date gave the final number of 31088 unique clusters over all these 7 days. 
- 
+than 50 clusters.
+
 ## Identification of Clusters over different days
 
 The naming of the cluster is meant to help identify same clusters of different days.
