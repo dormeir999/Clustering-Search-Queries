@@ -91,47 +91,72 @@ some lower functions contain saving and loading models and NLP vectorizors
  capabilities (see functions parameters and description). 
 
 Hence, here's the functions order of running:
+
 1. import_process_cluster_output_log: run entire pipeline logging capability
+
     2. import_process_cluster_output: run entire pipeline
+    
       3. import_df: import the search queries df (as exported from BigQuery)
+      
       4. pre_process_df: prepare the df for clustering
+      
         5. clean_search_query: clean the language data
+        
           6. find_kmeans_clusters_per_subcategory_per_day: clusters search queries and adds the cluster labels to df
+          
            7. get_separate_days_df_dict: turn df into dict (runs, but obsolete)
+           
            8. find_kmeans_clusters_per_subcategory_days_dict: clusters the queries df when it's in his dict form
+           
              9. find_kmeans_clusters_per_subcategory: clusters search queries and adds the cluster labels to df
+             
                10. get_subcategories_indices: find the indices of queries for each subcategory
+               
                11. nlp_process: prepares the language data representation for clustering
+               
                   12.  nlp_process_words_counts_and_searches/nlp_process_bow/nlp_process_tfidf/nlp_process_doc2vec:
                        functions for representation specific nlp processing, they also call lower functions
                         
                         ----- Here's where the K-means clustering is called! -----
                   13.  get_clusters: generates clusters meta-data  from the k-means labels - most common query, 
                              query closest to centroid and scoring
+                             
                       14. most_cosine_similar_query_doc2vec/most_cosine_similar_query_doc2vec_rank/most_cosine_similar_vector:
                           scoring the clusters functions, some use cosine_similarity_two_vectors function below.
+                          
     15. aggregated_clusters: gives daily-unique name for each cluster and group the clusters
         over the original data frame features.
+        
     16. columns_in_df: return all columns from a list that are in a data frame
+    
     17. feature_engineering: adds the price feature for each cluster
     
     ----- if the queries df has several days, continue to the functions below -----
-    16. evaluate_aggregated_clusters_over_all_features: creates a dict with a key for each feature data over all days in all clusters
-       17. evaluate_aggregated_clusters: organize data over all days in all clusters for a specific feature
-    18. add_silhouette_score_over_all_days: create an average silhouette score of all days for all features evaluated
-    19. add_centroid_score_over_all_days: create an average centroid distance score of all days for all the features
-    20. get_and_plot_clusters_all_days: plots the evaluated features over time and cluster, 
+    17. evaluate_aggregated_clusters_over_all_features: creates a dict with a key for each feature data over all days in all clusters
+    
+       18. evaluate_aggregated_clusters: organize data over all days in all clusters for a specific feature
+       
+    19. add_silhouette_score_over_all_days: create an average silhouette score of all days for all features evaluated
+    
+    20. add_centroid_score_over_all_days: create an average centroid distance score of all days for all the features
+    
+    21. get_and_plot_clusters_all_days: plots the evaluated features over time and cluster, 
         for the highest score clusters.
-       21. plot_cluster_evaluated_all_features: if there are cluster that appear in all days, plot them. else - 
-       22. plot_counts_and_highest_values_over_numeric_features: plot the top scored clusters with highest values and
+        
+       22. plot_cluster_evaluated_all_features: if there are cluster that appear in all days, plot them. else - 
+       
+       23. plot_counts_and_highest_values_over_numeric_features: plot the top scored clusters with highest values and
             counts.
-    23. pickle_something: saves a pickle of the evaluated features over days over each cluster 
+            
+    24. pickle_something: saves a pickle of the evaluated features over days over each cluster 
     
     ----- The functions below will run also for just one day -----
-    24. pickle_something: saves a pickle of the kmeans models used  for labeling each search query (there's one model 
+    
+    25. pickle_something: saves a pickle of the kmeans models used  for labeling each search query (there's one model 
         for each sub category in each day), a pickle of the vectorizers used for representing the language data, and a
         pickle for dictionary 
-    25. df_save: saves the queries df with the labeling data (a row for each search query),
+        
+    26. df_save: saves the queries df with the labeling data (a row for each search query),
         and the aggregate clusters data (a row for each cluster in each day) 
      
      
