@@ -21,9 +21,6 @@ The current default models:
 it's possible to change these default settings to TF-IDF model which gives not too bad results,
 but the TF-IDF scoring method isn't good enough.
 
-The maximum amount of clusters the module will find is 8500 clusters for a day,
-if there are 170 most common sub-categories in of all search queries in a day. 
-
 ## Identification of Clusters over different days
 
 The naming of the cluster is meant to help identify same clusters of different days.
