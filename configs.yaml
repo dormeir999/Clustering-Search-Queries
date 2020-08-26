@@ -1,0 +1,135 @@
+# Production Values -
+# values for the import_process_cluster_output_log and import_process_cluster_output functions
+
+log: True  # if true, right output to log file instead of to screen
+display.max_rows: 500
+display.max_columns: 500
+display.width: 100
+
+fname_for_import:   # all days since january first
+fname_for_save: 'same as fname_for_import'  # unmark this for same name as fname_for_import
+vectorizer: 'doc2vec'  # see specific model parameters in the dictionaries below - tfidf, doc2vec or bow
+dates_to_filter:  #  either 'ALL' or a list - ['2020-03-25','2020-03-26','2020-03-30'] or ['2020-03-25']
+n_samples: 'ALL'
+n_categories: 'ALL'
+n_clusters:
+kmeans_weights_df_column:
+fit_vectorizer: True
+load_existing_kmeans: False
+compute_silhouette_rank: True
+compute_cosine_centroid_rank: True
+doc2vec_analyzer:   # 'word' or 'char'
+doc2vec_smallest_ngram:
+doc2vec_largest_ngram:
+doc2vec_windows:
+doc2vec_vector_size:
+doc2vec_min_count:
+doc2vec_epochs:
+tfidf_analyzer:
+tfidf_smallest_ngram:
+tfidf_largest_ngram:
+tfidf_min_df:
+date_feature:
+save_df: True
+save_clusters_aggregated: True
+save_vectorizers: True
+save_models: True
+save_fig: True
+clusters_over_n_days : 0  # change this to only evaluate clusters with more this value of days
+plot_clusters_evaluated: True
+plot_n_top_clusters: 5
+plot_fig_size: (7, 4.8)
+plot_rotate_x_degrees: 20
+PICKLE_SUFFIX: '.pickle'
+n_samples_test_pipeline: 30  # use this number to test the pipeline
+
+df_features:
+  query:
+  n_queries:
+  queries:
+  no_searches:
+  search_with_clicks:
+  total_number_of_search_results:
+  listings_with_orders:
+  revenue:
+  orders:
+  date:
+  sub_category:
+  cluster:
+  cluster_name:
+  cluster_common_query:
+  cluster_size:
+  cluster_closest_to_centroid_query:
+  cluster_closest_centroid_rank:
+  counts:
+  subcategory_name:
+  kmeans_models:
+  sentences_vectors:
+  cluster_rank_silhouette:
+  silhouette_over_all_days:
+  centroid_over_all_days:
+  cols_to_drop: []
+  char_lengths:
+  clicks_per_search:
+  price:
+
+clean_search_query:
+  punctuation_to_remove: '[^A-za-z0-9]+'
+
+silhouette:
+  unranked_rank:   # the value for clusters of only one search term - we can't compute silhouette over these clusters
+
+
+# Research Values -
+#values for lower functions
+
+bow:
+  min_df:
+  analyzer:  # char or word
+  smallest_ngram:   # also used by doc2vec and tfidf
+  largest_ngram:   # also used by doc2vec and tfidf
+
+doc2vec:  # for ngram_range see bow above
+  vector_size:
+  min_count:
+  epochs:
+  window:
+  fname:
+
+
+plot_feature:
+  n_search_queries: 10
+  figsize: (8, 6)
+  rot: 45
+
+svd:
+  pct_queries_to_show:
+  n_components:
+  n_iter:
+  random_state:
+  figsize: (20, 10)
+  cmap: pylab.cm.cool
+  fontsize: 30
+  annotate_size: 15
+
+top_words_dict:
+  searches_threshold:
+
+find_clusters_kmeans:
+  n_samples:
+  n_clusters: [5, 10, 25, 50, 100, 200, 300, 500, 750]
+  rand_state: 0
+
+kmeans:
+  n_clusters:
+  vectorizer:
+  n_categories: 'ALL'
+  divisor_n_clusters: 5
+  rand_state: 0
+  n_days: 'ALL'
+
+cluster_describe:
+  columns_to_remove:
+
+
+
