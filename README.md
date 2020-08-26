@@ -60,6 +60,9 @@ and the running time of the entire process.
 
 ## Installation
 
+1. Set the first bulk of configurations in the configs.yaml file.
+2. Install the relevant modules:
+
 `pip install importlib`<br>
 `pip install yaml`<br>
 `pip install datetime`<br>
@@ -78,6 +81,18 @@ and the running time of the entire process.
 ## Usage
 
 run `python main.py`, or load the function in the `utils.py` file and run them separately. 
+
+### Changing Running Parameters (configs.yaml)
+
+* The first bulk of values is of the *Production* values - 
+the complete pipeline (aka last function of the complete pipeline `import_process_cluster_output_log`)
+uses these values. change only if you already tested those values.
+* The second bulk of values is of the *Research* values -
+The functions below the highest functions use these values as default.
+You can change those values and run the lower function for research and optimize the algorithem.
+* You can also overrule the yaml values when calling a function, while specifying values
+for the function parameters (otherwise the parameters defaults will be used,
+which are in most cases the yaml file values)
 
 ### The Pipeline Structure (utils.py)
 
