@@ -1,4 +1,4 @@
-# Production Values -
+# Production Values
 # values for the import_process_cluster_output_log and import_process_cluster_output functions
 
 log: True  # if true, right output to log file instead of to screen
@@ -80,7 +80,7 @@ silhouette:
   unranked_rank:   # the value for clusters of only one search term - we can't compute silhouette over these clusters
 
 
-# Research Values -
+# Research Values
 # values for lower functions (values for manually calling the function that come after import_process_cluster_output)
 
 bow:
