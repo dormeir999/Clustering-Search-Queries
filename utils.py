@@ -1,14 +1,21 @@
 """
 Author: Dor Meir
+Date: 26.8.2020
+For any questions, please contact me at: Dor.meir999@gmail.com
 """
+
 import datetime
 import os
 import pickle
-from contextlib import redirect_stdout
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import yaml
+import nltk
+import re
+import gensim
+from collections import defaultdict
+from gensim.parsing.preprocessing import preprocess_documents
 from scipy.spatial.distance import cosine
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import CountVectorizer
@@ -16,13 +23,8 @@ from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.decomposition import TruncatedSVD
 from nltk.corpus import stopwords
 from gensim.parsing.preprocessing import remove_stopwords
-import nltk
+from contextlib import redirect_stdout
 from sklearn.metrics import silhouette_samples
-import re
-import gensim
-from collections import defaultdict
-from gensim.parsing.preprocessing import preprocess_documents
-import yaml
 
 with open('configs.yaml') as f:
     configs = yaml.load(f, Loader=yaml.FullLoader)
@@ -177,7 +179,7 @@ def nlp_process_bow(df, fit_vectorizer=True, save_vectorizer=True, fname=None,
     :param min_df: A TF-IDF parameter. Ignore terms that have a document frequency strictly lower than this threshold.
     :param largest_ngram: largest ngram in the ngram range used for the analyzer
     :param smallest_ngram: smallest ngram in the ngram range used for the analyzer
-    :param analyzer: The embeddings building blocks. default is 'word' (gensim default) for doc2vec
+    :param analyzer: The embeddings building blocks. default is 'word' (Gensim's default) for doc2vec
     :param fit_vectorizer: if true, retrain the bow. if false, loads the existing one from fname.
     :param save_vectorizer: if true, saves the pickles the vectorizer and the vectorized queries
     :param fname: if fit_vectorizer is False, loads the model from this file name
@@ -318,7 +320,6 @@ def nlp_process(df, words_counts_and_searches=False, bow=False, tfidf=False, doc
     :param fname: if fit_vectorizer is False, loads the model from this file name
     :param words_counts_and_searches: if True returns the words counts and word searches in the entire corpus
     (disregarding the sentence structure of the corpus).
-    :param stop_words: None for not removing stop_words, default is removing english stop_words
     :param df: the queries df
     :param bow: bool for returning bag of words of the query_feature + dictionary
     :param tfidf:  bool for returning tfidf of the query_feature + dictionary
@@ -420,11 +421,11 @@ def feature_engineering(df, query_lens=True, clicks_per_search=True, price=True,
                         orders_feature=configs['df_features']['orders']):
     """
     Engineer new features for the df
-    :param revenue_feature: For bq-results-20200712-141041-tqwab845scx, revenue per listing
-    :param orders_feature: For bq-results-20200712-141041-tqwab845scx, order per listing
-    :param price: For bq-results-20200712-141041-tqwab845scx, if both orders and revenues exist, create price
+    :param revenue_feature: revenue per listing
+    :param orders_feature: order per listing
+    :param price: if both orders and revenues exist, create price
     :param df: the search queries df
-    :param fname: Name of the proccessed df file to save/load
+    :param fname: Name of the processed df file to save/load
     :param load_existing: if true, imports existing preprocessed df
     :param save_df: if true, saves df
     :param query_lens: no. of characters of the search query
@@ -748,12 +749,13 @@ def get_clusters(df, cluster_labels, kmeans_model, vectorizer_model, idx_subcate
 
                 print("      Computing label_centroid_dict . . .")
                 label_centroid_dict = {label:
-                    most_cosine_similar_query_doc2vec(kmeans_model.cluster_centers_[label], vectorizer_model, df)
-                                       for label in range(len(kmeans_model.cluster_centers_))}
+                                           most_cosine_similar_query_doc2vec(kmeans_model.cluster_centers_[label],
+                                                                             vectorizer_model, df)
+                                           for label in range(len(kmeans_model.cluster_centers_))}
 
                 label_rank_dict = {label: most_cosine_similar_query_doc2vec_rank(kmeans_model.cluster_centers_[label],
-                                                     vectorizer_model) for label in range(
-                                                     len(kmeans_model.cluster_centers_))}
+                                                                                 vectorizer_model) for label in range(
+                    len(kmeans_model.cluster_centers_))}
 
                 print("      Assigning centroids using the label_centroid_dict . . .")
                 queries[cluster_closest_to_centroid_query] = queries[labels].transform(lambda x: label_centroid_dict[x])
@@ -773,7 +775,7 @@ def get_clusters(df, cluster_labels, kmeans_model, vectorizer_model, idx_subcate
                 print("      Computing label_centroid_dict . . .")
                 label_centroid_dict = {label: (
                     most_cosine_similar_vector(df, kmeans_model.cluster_centers_[label], queries_vectors.toarray())) for
-                                              label in range(len(kmeans_model.cluster_centers_))}
+                    label in range(len(kmeans_model.cluster_centers_))}
                 print("      Assigning centroids using the label_centroid_dict . . .")
                 queries[cluster_closest_to_centroid_query] = queries[labels].transform(lambda x: label_centroid_dict[x])
                 # split the tuple result (query, rank) into two columns:
@@ -786,7 +788,7 @@ def get_clusters(df, cluster_labels, kmeans_model, vectorizer_model, idx_subcate
             print("   Computing silhouette similarity rank . . .")
             n_clusters = len(queries[labels].unique())
             if n_clusters < 2:
-                print(f"   There are only {n_clusters} cluster in this subcateogry, "
+                print(f"   There are only {n_clusters} cluster in this subcategory, "
                       f"can't compute silhouette (rank as {configs['silhouette']['unranked_rank']}).")
                 queries[cluster_rank_silhouette] = configs['silhouette']['unranked_rank']
             else:
@@ -806,11 +808,11 @@ def get_clusters(df, cluster_labels, kmeans_model, vectorizer_model, idx_subcate
 def get_subcategories_indices(df, n_categories=None, sub_category_feature=configs['df_features']['sub_category']):
     """
     Receives the queries df, returns a list of indices for the queries belonging to each category (or sub category)
-    :param n_categories: The number of categories (default is the maximum in bq-results-20200712-141041-tqwab845scx)
+    :param n_categories: The number of categories (default is the maximum in the imported file)
     :param df: the queries df :param n_categories: The number of sub categories to return, default is all of them
-    :param sub_category_feature: the name of the sub_cateogry feature (you can also put the categories feature here)
+    :param sub_category_feature: the name of the sub_category feature (you can also put the categories feature here)
     :return: a list in which each member is an index list of indices of the rows of the queries belonging to each
-    category and a list of the sub category names, all orderd by sub category size
+    category and a list of the sub category names, all ordered by sub category size
     """
     if not n_categories:
         n_categories = len(df[sub_category_feature].unique())
@@ -1110,8 +1112,8 @@ def most_cosine_similar_vector(df, centroid, vectors, query_feature=configs['df_
     :param query_feature: the name of the query feature
     :return: the most similair search query name and his cosine similarity rank
     """
-    #idx_most_similar = np.argmax([cosine_similarity_two_vectors(centroid, vector) for vector in vectors])
-    #maximal_similarity = np.max([cosine_similarity_two_vectors(centroid, vector) for vector in vectors])
+    # idx_most_similar = np.argmax([cosine_similarity_two_vectors(centroid, vector) for vector in vectors])
+    # maximal_similarity = np.max([cosine_similarity_two_vectors(centroid, vector) for vector in vectors])
     similarities_matrix = vectors.dot(centroid)
     idx_most_similar = np.argmax(similarities_matrix)
     maximal_similarity = np.max(similarities_matrix)
@@ -1378,7 +1380,7 @@ The process started at {start_time}""")
         # If true, clusters_evaluated exists and so return it
         if plot_numeric_features_clusters_evaluated:
             # If true, eval_clusters_all_days exists and return it
-            return eval_clusters_all_days, clusters_evaluated, aggregated_clusters, df_clustered_unified, kmeans_models,\
+            return eval_clusters_all_days, clusters_evaluated, aggregated_clusters, df_clustered_unified, kmeans_models, \
                    vectorizers
         return clusters_evaluated, aggregated_clusters, df_clustered_unified, kmeans_models, vectorizers
     else:
@@ -1778,10 +1780,14 @@ def get_all_days_clusters(aggregated_clusters):
     """
     cluster_name = configs['df_features']['cluster_name']
     search_date = configs['df_features']['date']
-    aggregated_clusters['name_and_date']=(aggregated_clusters[cluster_name] + '_' + aggregated_clusters[search_date])
-    temp = pd.concat([aggregated_clusters['name_and_date'],aggregated_clusters[aggregated_clusters.columns.difference(['name_and_date'])]],axis=1)
-    temp_value_counts = temp[~temp.name_and_date.isin(temp.name_and_date.value_counts()[temp.name_and_date.value_counts()>1].index)][cluster_name].value_counts()
-    agg_clus_7_days = temp[temp.cluster_name.isin(temp_value_counts[temp_value_counts==7].index)].sort_values(by=[cluster_name])
+    aggregated_clusters['name_and_date'] = (aggregated_clusters[cluster_name] + '_' + aggregated_clusters[search_date])
+    temp = pd.concat([aggregated_clusters['name_and_date'],
+                      aggregated_clusters[aggregated_clusters.columns.difference(['name_and_date'])]], axis=1)
+    temp_value_counts = \
+        temp[~temp.name_and_date.isin(temp.name_and_date.value_counts()[temp.name_and_date.value_counts() > 1].index)][
+            cluster_name].value_counts()
+    agg_clus_7_days = temp[temp.cluster_name.isin(temp_value_counts[temp_value_counts == 7].index)].sort_values(
+        by=[cluster_name])
     return agg_clus_7_days
 
 
