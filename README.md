@@ -60,7 +60,7 @@ and the running time of the entire process.
 
 ## Installation
 
-1. Set the first bulk of configurations in the configs.yaml file.
+1. In configs.yaml file, set the production configurations (first bulk). see `Changing Running Parameters` below for more info.
 2. Install the relevant modules:
 
 `pip install importlib`<br>
@@ -84,9 +84,9 @@ run `python main.py`, or load the function in the `utils.py` file and run them s
 
 ### Changing Running Parameters (configs.yaml)
 
-* The first bulk of values is of the *Production* values - 
+* The first bulk of values (up until line 80) is of the *Production* values - 
 the complete pipeline (aka last function of the complete pipeline `import_process_cluster_output_log`)
-uses these values. change only if you already tested those values.
+uses these values. 
 * The second bulk of values is of the *Research* values -
 The functions below the highest functions use these values as default.
 You can change those values and run the lower function for research and optimize the algorithem.
