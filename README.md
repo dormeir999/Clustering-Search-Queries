@@ -10,16 +10,8 @@ You can Use the module's result to explore different groups of search queries an
 ## The models
 
 The process contain two main phases:
-1. Representation of the search queries as vectors of numbers.
-2. Clustering those vectors.
-
-The current default models:
-1. Gensim's **Doc2Vec** embeddings representation of the search queries with 1-gram word analyzer.
-2. Scikit-Learn's 50 **K-means** clusters over each most_common_sub_category in each day, 
-   with weights of the number of searches of each search query.
-
-it's possible to change these default settings to TF-IDF model which gives not too bad results,
-but the TF-IDF scoring method isn't good enough.
+1. Representation of the search queries as vectors of numbers (Bag-Of-Words, TF-IDF or Doc2Vec).
+2. Clustering those vectors (K-means).
 
 ## Identification of Clusters over different days
 
@@ -34,9 +26,7 @@ and of the most common query in the cluster.
 ## Evaluation of the clusters
 
 The results for the Doc2vec model contain both average silhouette score over all days, and the centroid distance
-score of all days (TF-IDF model contains only silhouette score). The second score, which is the cosine similarity of the
-query closest to the centroid to cluster centroid, is found to be a better metric of the goodness of the cluster 
-than the silhouette score. That's the main reason why Doc2Vec was selected over TF-IDF.
+score of all days (TF-IDF model contains only silhouette score).
 If the data contains more than one day, the results will be evaluated for each relevant feature for all clusters and
 all days.  
 
