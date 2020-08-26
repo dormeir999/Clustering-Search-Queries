@@ -6,7 +6,7 @@ display.max_rows: 500
 display.max_columns: 500
 display.width: 100
 
-fname_for_import:   # all days since january first
+fname_for_import:
 fname_for_save: 'same as fname_for_import'  # unmark this for same name as fname_for_import
 vectorizer: 'doc2vec'  # see specific model parameters in the dictionaries below - tfidf, doc2vec or bow
 dates_to_filter:  #  either 'ALL' or a list - ['2020-03-25','2020-03-26','2020-03-30'] or ['2020-03-25']
@@ -81,7 +81,7 @@ silhouette:
 
 
 # Research Values -
-#values for lower functions
+# values for lower functions (values for manually calling the function that come after import_process_cluster_output)
 
 bow:
   min_df:
