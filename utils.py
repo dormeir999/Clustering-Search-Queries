@@ -292,7 +292,7 @@ def nlp_process_doc2vec(df, fit_vectorizer=True, save_vectorizer=True, fname=Non
             tokenized_sentences = sentences_tokenizer(df[query_feature], cv)
 
         train_data = list(create_tagged_document(tokenized_sentences))
-        model_doc2vec = gensim.models.doc2vec.Doc2Vec(vector_size=vector_size, min_count=min_count, epochs=epochs,
+        model_doc2vec = gensim.models.doc2vec.Doc2Vec(train_data, vector_size=vector_size, min_count=min_count, epochs=epochs,
                                                       windows=windows)
         model_doc2vec.build_vocab(train_data)
         if save_vectorizer:
