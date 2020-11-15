@@ -7,6 +7,8 @@ Cluster Search Queries is a Python module for automated clustering search querie
 
 You can use the module's result to explore different groups of search queries and find new search query trends.
 
+![alt text](https://github.com/dormeir999/Clustering-Search-Queries/blob/master/example.JPG)
+
 ## The models
 
 The process contain two main phases:
